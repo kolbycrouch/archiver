@@ -353,6 +353,7 @@ func (z *Zip) writeWalk(source, topLevelFolder, destination string) error {
 			FileInfo: FileInfo{
 				FileInfo:   info,
 				CustomName: nameInArchive,
+				SrcPath:    fpath,
 			},
 			ReadCloser: file,
 		})
@@ -434,14 +435,18 @@ func (z *Zip) writeFile(f File, writer io.Writer) error {
 		return nil // directories have no contents
 	}
 	if isSymlink(f) {
+		fi, ok := f.FileInfo.(FileInfo)
+		if !ok {
+			return fmt.Errorf("failed to cast fs.FileInfo to archiver.FileInfo: %v", f)
+		}
 		// file body for symlinks is the symlink target
-		linkTarget, err := os.Readlink(f.Name())
+		linkTarget, err := os.Readlink(fi.SrcPath)
 		if err != nil {
-			return fmt.Errorf("%s: readlink: %v", f.Name(), err)
+			return fmt.Errorf("%s: readlink: %v", fi.SrcPath, err)
 		}
 		_, err = writer.Write([]byte(filepath.ToSlash(linkTarget)))
 		if err != nil {
-			return fmt.Errorf("%s: writing symlink target: %v", f.Name(), err)
+			return fmt.Errorf("%s: writing symlink target: %v", fi.SrcPath, err)
 		}
 		return nil
 	}

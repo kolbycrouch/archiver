@@ -125,6 +125,7 @@ type File struct {
 type FileInfo struct {
 	os.FileInfo
 	CustomName string
+	SrcPath	string
 }
 
 // Name returns fi.CustomName if not empty;

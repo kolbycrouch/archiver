@@ -333,6 +333,7 @@ func (t *Tar) writeWalk(source, topLevelFolder, destination string) error {
 			FileInfo: FileInfo{
 				FileInfo:   info,
 				CustomName: nameInArchive,
+				SrcPath:    fpath,
 			},
 			ReadCloser: file,
 		})
@@ -378,10 +379,14 @@ func (t *Tar) Write(f File) error {
 
 	var linkTarget string
 	if isSymlink(f) {
+		fi, ok := f.FileInfo.(FileInfo)
+		if !ok {
+			return fmt.Errorf("failed to cast fs.FileInfo to archiver.FileInfo: %v", f)
+		}
 		var err error
-		linkTarget, err = os.Readlink(f.Name())
+		linkTarget, err = os.Readlink(fi.SrcPath)
 		if err != nil {
-			return fmt.Errorf("%s: readlink: %v", f.Name(), err)
+			return fmt.Errorf("%s: readlink: %v", fi.SrcPath, err)
 		}
 	}
 
