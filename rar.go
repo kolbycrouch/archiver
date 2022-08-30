@@ -110,7 +110,6 @@ func (r *Rar) Unarchive(source, destination string) error {
 		}
 		if err != nil {
 			if r.ContinueOnError || IsIllegalPathError(err) {
-				log.Printf("[ERROR] Reading file in rar archive: %v", err)
 				continue
 			}
 			return fmt.Errorf("reading file in rar archive: %v", err)

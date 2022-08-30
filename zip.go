@@ -230,7 +230,6 @@ func (z *Zip) Unarchive(source, destination string) error {
 		}
 		if err != nil {
 			if z.ContinueOnError || IsIllegalPathError(err) {
-				log.Printf("[ERROR] Reading file in zip archive: %v", err)
 				continue
 			}
 			return fmt.Errorf("reading file in zip archive: %v", err)

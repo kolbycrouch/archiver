@@ -166,7 +166,6 @@ func (t *Tar) Unarchive(source, destination string) error {
 		}
 		if err != nil {
 			if t.ContinueOnError || IsIllegalPathError(err) {
-				log.Printf("[ERROR] Reading file in tar archive: %v", err)
 				continue
 			}
 			return fmt.Errorf("reading file in tar archive: %v", err)
