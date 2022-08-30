@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/klauspost/compress/zip"
-	"github.com/mholt/archiver/v3"
+	"github.com/kolbycrouch/archiver/v3"
 	"github.com/nwaples/rardecode"
 )
 
